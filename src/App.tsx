@@ -7,9 +7,11 @@ import { Button } from '@/components/ui/button'
 
 function App() {
   return (
-    <>
-      <Button> asdf asdufgasdgfuasuydfyuiasgdiyfugasyuidgfyuiasgdiyufgyi </Button>
-    </>
+    <div className="bg-background border rounded-md shadow h-screen w-full flex items-center justify-center">
+      <Button>
+        Click me
+      </Button>
+    </div>
   )
 }
 
