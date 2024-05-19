@@ -9,7 +9,7 @@ interface Props {
 const AudioSection: React.FC<Props> = (props) => {
     return (
         <div className={"h-full border  " + (props.done ? "bg-cyan-500 border-cyan-100" : "bg-muted border-slate-500")}
-            style={{width: props.width / 22 * 100 + "%"}}
+            style={{width: parseInt(props.width, 10) / 22 * 100 + "%"}}
         />
     );
 }
