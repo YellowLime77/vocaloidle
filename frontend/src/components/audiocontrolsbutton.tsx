@@ -1,17 +1,31 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import './audiocontrolsbutton.css';
 
-import { CirclePlay } from 'lucide-react';
+import { CirclePlay, CirclePause } from 'lucide-react';
 
 interface Props {
     playing: boolean;
 }
 
-const AudioControlButton: React.FC<Props> = () => {
+const AudioControlButton: React.FC<Props> = (props) => {
+    const [playing, setPlaying] = useState(props.playing);
+
+    const playSong = () => {
+        console.log("Playing song");
+
+        setPlaying(true);
+    }
+
+    const pauseSong = () => {
+        console.log("Pausing song");
+
+        setPlaying(false);
+    }
+
     return (
-        <div className="justify-center h-1/6 w-1/6">
-            <CirclePlay className="h-16 w-16" />
+        <div className="justify-center w-20 h-20 cursor-pointer hover:opacity-75 active:opacity-30 active:scale-90 duration-200">
+            {playing ? (<CirclePause className="w-full h-full" onClick={pauseSong}/>) : (<CirclePlay className="w-full h-full" onClick={playSong}/>)}
         </div>
     );
 }

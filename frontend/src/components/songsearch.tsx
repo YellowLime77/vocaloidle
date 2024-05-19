@@ -52,7 +52,7 @@ const SongSearch: React.FC<Props> = (props) => {
                   setValue(currentValue === value ? "" : currentValue)
                   setOpen(false)
                 }}
-                className="text-md m-1"
+                className="text-md m-1 cursor-pointer"
               >
                 {song.title + " - " + song.author}
               </CommandItem>

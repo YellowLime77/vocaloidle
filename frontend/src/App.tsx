@@ -15,14 +15,13 @@ import AudioControlButton from './components/audiocontrolsbutton'
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="container flex flex-col h-screen">
-        <header className="border-b flex border-cyan-600 justify-center align-middle p-2 max-h-20 bg-cyan-800 shadow">
-          <img src={vocaloidle} className="max-h-20" alt="Vocaloidle logo" />
-        </header>
-
+      <header className="border-b flex border-cyan-600 justify-center align-middle p-2 max-h-20 bg-cyan-800 shadow">
+        <img src={vocaloidle} className="max-h-20" alt="Vocaloidle logo" />
+      </header>
+      <div className="container flex flex-col" style={{height: "calc(100vh - 5rem)"}}>
         <div className="container flex flex-col w-full h-full bg-cyan-900/20 border rounded-b-lg shadow space-y-4 p-4 items-center">
           <Card song="Ghost Rule" author="DECO*27" shown={true} correct={false}  />
-          <Card song="Miku" author="Anamanaguchi" shown={true} correct={true} />
+          <Card song="Lemon" author="Hachi" shown={true} correct={true} />
           <Card song="" author="" shown={false} />
           <Card song="" author="" shown={false} />
           <Card song="" author="" shown={false} />
@@ -61,7 +60,8 @@ function App() {
         </div>
 
         <div className="h-12 my-2 flex flex-row justify-center space-x-4">
-          <a href="https://matthewyang.tech/" className='text-cyan-100'>Made with ❤️ by Matthew Yang</a>
+          <a href="https://matthewyang.tech/" className='text-cyan-100'>By Matthew Yang</a>
+          <p className="text-cyan-100">&bull;</p>
           <a href="https://github.com/YellowLime77/vocaloidle" className="text-cyan-100">GitHub</a>
         </div>
       </div>
