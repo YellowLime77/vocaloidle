@@ -11,7 +11,7 @@ interface Props {
 
 const Card: React.FC<Props> = (props) => {
   return (
-    <div className={(props.shown ? "shown " + (!props.correct ? "border-rose-900 bg-rose-700 shown" : "border-green-900 bg-green-700") : "border-slate-900 bg-muted") + " card flex items-center justify-center rounded-md border-4 px-4 py-3 font-sans text-lg h-16 duration-700"}>
+    <div className={(props.shown ? "shown " + (!props.correct ? "border-rose-900 bg-rose-700 shown" : "border-green-900 bg-green-700") : "border-slate-900 bg-muted") + " card flex items-center justify-center rounded-md border-4 px-4 py-3 font-sans text-lg h-16 duration-700 w-full"}>
         {props.shown ? props.song + " by " + props.author : ""}
     </div>
   );

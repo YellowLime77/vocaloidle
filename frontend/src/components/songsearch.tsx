@@ -16,8 +16,13 @@ import {
 // } from "@/components/ui/popover"
 // import { Input } from "@/components/ui/input"
 
+interface Song {
+  title: string;
+  author: string;
+}
+
 interface Props {
-  songs: string[];
+  songs: Song[];
 }
 
 const SongSearch: React.FC<Props> = (props) => {
@@ -25,7 +30,7 @@ const SongSearch: React.FC<Props> = (props) => {
   const [value, setValue] = useState("")
 
   return (
-    <Command className="h-fit w-full">
+    <Command className="h-fit w-full duration-1000">
       <CommandInput className="text-md" placeholder="Search song..." value={value} onInput={(e) => {
         setValue(e.currentTarget.value);
         if (e.currentTarget.value === "" && open) {
@@ -41,15 +46,15 @@ const SongSearch: React.FC<Props> = (props) => {
           <CommandList className="p-2 h-fit">
             {props.songs.map((song) => (
               <CommandItem
-                key={song}
-                value={song}
+                key={song.title + " - " + song.author}
+                value={song.title + " - " + song.author}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
                   setOpen(false)
                 }}
                 className="text-md m-1"
               >
-                {song}
+                {song.title + " - " + song.author}
               </CommandItem>
             ))}
           </CommandList>

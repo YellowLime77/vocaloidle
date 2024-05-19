@@ -2,3 +2,31 @@ body {
     overflow: hidden;
     position: relative;
 }
+
+.slice0 {
+    width: calc(100% / 22)
+}
+
+.slice1 {
+    width: calc(100% / 22)
+}
+
+.slice2 {
+    width: calc(100% / 22 * 2)
+}
+
+.slice3 {
+    width: calc(100% / 22 * 3)
+}
+
+.slice4 {
+    width: calc(100% / 22 * 4)
+}
+
+.slice5 {
+    width: calc(100% / 22 * 5)
+}
+
+.slice6 {
+    width: calc(100% / 22 * 6)
+}
