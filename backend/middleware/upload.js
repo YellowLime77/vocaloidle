@@ -3,9 +3,12 @@ const { GridFsStorage } = require('multer-gridfs-storage');
 const crypto = require('crypto');
 const path = require('path');
 
+require('dotenv').config();
+const MONGO_URI = process.env.MONGO_URI;
+
 // Create storage engine
 const storage = new GridFsStorage({
-  url: "mongodb+srv://matthewyanglele:<password>@vocaloidle.tp281ql.mongodb.net/?retryWrites=true&w=majority&appName=Vocaloidle",
+  url: MONGO_URI,
   file: (req, file) => {
     return new Promise((resolve, reject) => {
       crypto.randomBytes(16, (err, buf) => {
