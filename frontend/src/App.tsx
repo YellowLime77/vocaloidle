@@ -34,9 +34,10 @@ function App() {
           </div>
         </div>
 
-        <footer className="h-12 justify-end my-2">
-          <p className="text-center text-white">Made with ❤️</p>
-        </footer>
+        <div className="h-12 my-2 flex flex-row justify-center space-x-4">
+          <a href="https://matthewyang.tech/" className='text-cyan-100'>Made with ❤️ by Matthew Yang</a>
+          <a href="https://github.com/YellowLime77/vocaloidle" className="text-cyan-100">GitHub</a>
+        </div>
       </div>
     </ThemeProvider>
   )
