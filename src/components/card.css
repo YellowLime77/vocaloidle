@@ -1,0 +1,7 @@
+.card {
+    transform: rotateX(-0.5turn);
+}
+
+.card.shown {
+    transform: rotateX(0);
+}
