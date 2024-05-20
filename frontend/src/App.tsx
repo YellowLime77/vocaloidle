@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 import './App.css'
 
@@ -21,6 +21,7 @@ function App() {
   const [correctSong, setCorrectSong] = useState("");
   const [index, setIndex] = useState(0);
   const [src, setSrc] = useState("")
+  const [playing, setPlaying] = useState(false);
 
   const [cards] = useState([
     {label: "", shown: false, correct: false},
@@ -41,7 +42,18 @@ function App() {
     {width: "6", done: false}
   ])
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+
+
   useEffect(() => {
+    // wait for the request to finish
+    axios.get('https://vocaloidle-server.onrender.com/ping')
+      .then(res => {
+        console.log(res.data)
+        overlayRef.current!.style.display = "none";
+      })
+
     axios.get('https://vocaloidle-server.onrender.com/songs/list')
       .then(res => {
         setSongs(res.data)
@@ -53,6 +65,10 @@ function App() {
         setCorrectSong(response.en + " - " + response.jp + " - " + response.romaji + " - " + response.producer);
         setSrc("https://vocaloidle-server.onrender.com/songs/audio/" + response._id)
       })
+
+    if (audioRef.current) {
+      audioRef.current.volume = 0.5;
+    }
 
   }, [])
 
@@ -76,12 +92,25 @@ function App() {
     audioSections[index + 1].done = true;
   }
 
+  const onTimeUpdate = () => {
+    if (audioRef.current) {
+        if (audioRef.current.currentTime >= 2) {
+            setPlaying(false);
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
+    }
+}
+
   const handleSongSearchChange = (newValue: string) => {
     setSongSearchValue(newValue);
   };
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <div ref={overlayRef} className="flex items-center text-4xl text-center justify-center fixed w-full h-screen top-0 left-0 right-0 bottom-0 bg-transparent/30 backdrop-blur-lg z-20">
+        Loading...
+      </div>
 
       <header className="border-b flex border-cyan-600 justify-center align-middle p-2 max-h-20 bg-cyan-800 shadow">
         <img src={vocaloidle} className="max-h-20" alt="Vocaloidle logo" />
@@ -94,7 +123,6 @@ function App() {
 
           <div className="h-5" />
 
-          <audio src={src} controls className='h-20'/>
 
           <div className="container flex flex-row space-x-2 px-0 w-full h-full">
             <SongSearch songs={songs} value={""} onValueChange={handleSongSearchChange} />
@@ -107,7 +135,7 @@ function App() {
             )) }
           </div>
 
-          <AudioControlButton playing={false} />
+          <AudioControlButton playing={playing} setPlaying={setPlaying} src={src} audioRef={audioRef} onTimeUpdate={onTimeUpdate} />
         </div>
 
         <div className="h-12 my-2 flex flex-row justify-center space-x-4">
