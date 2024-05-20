@@ -48,4 +48,16 @@ router.get('/list', async (req, res) => {
     }
 });
 
+// get random
+router.get('/random', async (req, res) => {
+    try {
+        const count = await Song.countDocuments();
+        const random = Math.floor(Math.random() * count);
+        const song = await Song.findOne().skip(random);
+        res.status(200).send(song);
+    } catch (error) {
+        res.status(500).send({ error: 'Error fetching song' });
+    }
+});
+
 module.exports = router;
