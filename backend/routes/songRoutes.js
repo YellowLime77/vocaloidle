@@ -35,6 +35,7 @@ router.get('/list', async (req, res) => {
         const songs = await Song.find();
         let songsOnlyNeeded = songs.map(song => {
             return {
+                _id: song._id,
                 producer: song.producer,
                 en: song.en,
                 jp: song.jp,
