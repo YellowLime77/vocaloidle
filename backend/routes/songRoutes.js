@@ -61,7 +61,7 @@ router.get('/random', async (req, res) => {
         const song = await Song.findOne().skip(random);
 
         const songOnlyNeeded = {
-            _id, song._id,
+            _id: song._id,
             producer: song.producer,
             en: song.en,
             jp: song.jp,
