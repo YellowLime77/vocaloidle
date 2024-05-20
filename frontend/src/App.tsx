@@ -20,7 +20,7 @@ function App() {
   const [songSearchValue, setSongSearchValue] = useState("");
   const [correctSong, setCorrectSong] = useState("");
   const [index, setIndex] = useState(0);
-  const [src, setSrc] = useState("https://vocaloidle-server.onrender.com/songs/audio/")
+  const [src, setSrc] = useState("")
 
   const [cards] = useState([
     {label: "", shown: false, correct: false},
@@ -51,7 +51,9 @@ function App() {
       .then(res => {
         const response = res.data;
         setCorrectSong(response.en + " - " + response.jp + " - " + response.romaji + " - " + response.producer);
+        setSrc("https://vocaloidle-server.onrender.com/songs/audio/" + response._id + ".mp3")
       })
+
   }, [])
 
   const submitGuess = () => {
@@ -80,7 +82,6 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <audio preload="auto" src={src}/>
 
       <header className="border-b flex border-cyan-600 justify-center align-middle p-2 max-h-20 bg-cyan-800 shadow">
         <img src={vocaloidle} className="max-h-20" alt="Vocaloidle logo" />
@@ -92,6 +93,8 @@ function App() {
           )) }
 
           <div className="h-5" />
+
+          <audio src={src} controls className='h-20'/>
 
           <div className="container flex flex-row space-x-2 px-0 w-full h-full">
             <SongSearch songs={songs} value={""} onValueChange={handleSongSearchChange} />
