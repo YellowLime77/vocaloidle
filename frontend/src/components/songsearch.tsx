@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 
 import './songsearch.css';
 
@@ -25,23 +25,19 @@ interface Props {
     romaji: string;
   }[];
 
-  value: string;
+  songSearchValue: string;
+  setSongSearchValue: (value: string) => void;
   onValueChange: (value: string) => void;
 }
 
-const SongSearch: React.FC<Props> = (props) => {
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
-
-  useEffect(() => {
-    setValue(props.value);
-  }, [props.value])
+const SongSearch: React.FC<Props> = ({songs, songSearchValue, setSongSearchValue, onValueChange}) => {
+  const [open, setOpen] = useState(false);
 
   return (
     <Command className="h-fit w-full duration-1000">
-      <CommandInput className="text-md" placeholder="Search song..." value={value} onInput={(e) => {
-        setValue(e.currentTarget.value);
-        props.onValueChange(e.currentTarget.value);
+      <CommandInput className="text-md" placeholder="Search song..." value={songSearchValue} onInput={(e) => {
+        setSongSearchValue(e.currentTarget.value);
+        onValueChange(e.currentTarget.value);
 
         if (e.currentTarget.value === "" && open) {
           setOpen(false)
@@ -54,13 +50,13 @@ const SongSearch: React.FC<Props> = (props) => {
         <>
           <CommandEmpty>No Songs Found</CommandEmpty>
           <CommandList className="p-2 h-fit">
-            {props.songs.map((song) => (
+            {songs.map((song) => (
               <CommandItem
                 key={ song._id }
                 value={ song.en + " - " + song.jp + " - " + song.romaji + " - " + song.producer }
                 onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue)
-                  props.onValueChange(currentValue === value ? "" : currentValue)
+                  setSongSearchValue(currentValue === songSearchValue ? "" : currentValue)
+                  onValueChange(currentValue === songSearchValue ? "" : currentValue)
                   
                   setOpen(false)
                 }}

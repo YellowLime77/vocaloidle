@@ -103,4 +103,16 @@ router.get('/audio/:id', async (req, res) => {
     }
 });
 
+router.get('/image/:id', async (req, res) => {
+    try {
+        let song = await Song.findById(req.params.id);
+
+        const downloadStream = bucket.openDownloadStream(new Types.ObjectId(song.imageFileId.toString()));
+        downloadStream.pipe(res);
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ error: 'Error fetching image file' });
+    }
+});
+
 module.exports = router;

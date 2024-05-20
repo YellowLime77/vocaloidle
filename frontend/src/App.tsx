@@ -12,6 +12,7 @@ import Card from './components/card'
 import SongSearch from './components/songsearch'
 import AudioSection from './components/audiosection'
 import AudioControlButton from './components/audiocontrolsbutton'
+import EndingDialog from './components/endingdialog'
 
 import axios from 'axios'
 
@@ -19,9 +20,19 @@ function App() {
   const [songs, setSongs] = useState([]);
   const [songSearchValue, setSongSearchValue] = useState("");
   const [correctSong, setCorrectSong] = useState("");
+
   const [index, setIndex] = useState(0);
+
   const [src, setSrc] = useState("")
+
+  const [durationMulti] = useState(2);
   const [playing, setPlaying] = useState(false);
+  const [audioLength, setAudioLength] = useState(1 * durationMulti);
+
+  const [endingOpen, setEndingOpen] = useState(false);
+  const [won, setWon] = useState(false);
+
+  const [imgSrc, setImgSrc] = useState("")
 
   const [cards] = useState([
     {label: "", shown: false, correct: false},
@@ -38,8 +49,7 @@ function App() {
     {width: "2", done: false},
     {width: "3", done: false},
     {width: "4", done: false},
-    {width: "5", done: false},
-    {width: "6", done: false}
+    {width: "5", done: false}
   ])
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -67,6 +77,7 @@ function App() {
         const response = res.data;
         setCorrectSong(response.en + " - " + response.jp + " - " + response.romaji + " - " + response.producer);
         setSrc("https://vocaloidle-server.onrender.com/songs/audio/" + response._id)
+        setImgSrc("https://vocaloidle-server.onrender.com/songs/image/" + response._id)
       })
 
     if (audioRef.current) {
@@ -80,28 +91,45 @@ function App() {
       return;
     }
     
-    if (index >= 6) {
-      console.log("Game Over")
+    if (index >= 5) {
+      setWon(false);
+      setEndingOpen(true);
       return;
     }
 
     const card = cards[index];
     card.label = songSearchValue;
-    card.correct = songSearchValue === correctSong;
     card.shown = true;
+
+    if (songSearchValue === correctSong) {
+      card.correct = true;
+      setWon(true);
+      setEndingOpen(true);
+    } else {
+      card.correct = false;
+    }
+
+    setSongSearchValue("");
 
     setIndex(index + 1);
 
     audioSections[index + 1].done = true;
+
+    if (index + 1 === 1) setAudioLength(2 * durationMulti);
+    else if (index + 1 === 2) setAudioLength(4 * durationMulti);
+    else if (index + 1 === 3) setAudioLength(7 * durationMulti);
+    else if (index + 1 === 4) setAudioLength(11 * durationMulti);
+    else if (index + 1 === 5) setAudioLength(16 * durationMulti);
+    else setAudioLength(9999);
   }
 
   const onTimeUpdate = () => {
     if (audioRef.current) {
-        if (audioRef.current.currentTime >= 2) {
-            setPlaying(false);
-            audioRef.current.pause();
-            audioRef.current.currentTime = 0;
-        }
+      if (audioRef.current.currentTime >= audioLength) {
+          setPlaying(false);
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+      }
     }
 }
 
@@ -114,6 +142,8 @@ function App() {
       <div ref={overlayRef} className="flex items-center text-4xl text-center justify-center fixed w-full h-screen top-0 left-0 right-0 bottom-0 bg-transparent/30 backdrop-blur-lg z-20 duration-500">
         Loading...
       </div>
+
+      <EndingDialog open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} />
 
       <header className="border-b flex border-cyan-600 justify-center align-middle p-2 max-h-20 bg-cyan-800 shadow">
         <img src={vocaloidle} className="max-h-20" alt="Vocaloidle logo" />
@@ -128,7 +158,7 @@ function App() {
 
 
           <div className="container flex flex-row space-x-2 px-0 w-full h-full">
-            <SongSearch songs={songs} value={""} onValueChange={handleSongSearchChange} />
+            <SongSearch songs={songs} songSearchValue={songSearchValue} setSongSearchValue={setSongSearchValue} onValueChange={handleSongSearchChange} />
             <Button className="bg-cyan-700 text-white hover:bg-cyan-800 w-24 h-12 justify-center text-md" onClick={submitGuess}>Guess</Button>
           </div>
 
