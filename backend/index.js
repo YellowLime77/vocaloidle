@@ -15,6 +15,11 @@ mongoose.connect(MONGO_URI, {
   useUnifiedTopology: true
 });
 
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB');
+}
+);
+
 app.use('/songs', songRoutes);
 
 app.get('/ping', (req, res) => {

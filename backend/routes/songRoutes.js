@@ -3,43 +3,53 @@ const router = express.Router();
 const upload = require('../middleware/upload');
 const Song = require('../models/song');
 
-const Grid = require('gridfs-stream');
 const mongoose = require('mongoose');
-const {GridFsStorage} = require('multer-gridfs-storage');
+const { MongoClient, GridFSBucket } = require('mongodb');
+const { Types } = require('mongoose');
 require('dotenv').config();
+const MONGO_URI = process.env.MONGO_URI;
 
-const conn = mongoose.createConnection(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-let gfs;
-conn.once('open', () => {
-    gfs = Grid(conn.db, mongoose.mongo);
-    gfs.collection('uploads');
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+const connection = mongoose.connection;
+
+let bucket;
+connection.once('open', () => {
+    bucket = new GridFSBucket(connection.db, {
+        bucketName: 'uploads'
+    });
 });
 
 router.post('/upload', upload.fields([{ name: 'audio' }, { name: 'image' }]), async (req, res) => {
     console.log("uploading song...");
     try {
-    const { producer, en, jp, romaji, spotify, yt, apple } = req.body;
-    const audioFileId = req.files['audio'][0].id;
-    const imageFileId = req.files['image'][0].id;
+        const { producer, en, jp, romaji, spotify, yt, apple } = req.body;
 
-    const newSong = new Song({
-      producer,
-      en,
-      jp,
-      romaji,
-      spotify,
-      yt,
-      apple,
-      audioFileId,
-      imageFileId
-    });
+        if (!req.files['audio'] || !req.files['image']) {
+            return res.status(400).send({ error: 'Audio or image file is missing' });
+        }
 
-    await newSong.save();
+        const audioFileId = req.files['audio'][0].id;
+        const imageFileId = req.files['image'][0].id;
 
-    res.status(201).send(newSong);
-  } catch (error) {
-    res.status(500).send({ error: 'Error uploading files or saving song metadata' });
-  }
+        const newSong = new Song({
+        producer,
+        en,
+        jp,
+        romaji,
+        spotify,
+        yt,
+        apple,
+        audioFileId,
+        imageFileId
+        });
+
+        await newSong.save();
+
+        res.status(201).send(newSong);
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ error: 'Error uploading files or saving song metadata' });
+    }
 });
 
 router.get('/list', async (req, res) => {
@@ -83,11 +93,13 @@ router.get('/random', async (req, res) => {
 
 router.get('/audio/:id', async (req, res) => {
     try {
-        const song = await Song.findById(req.params.id);
-        const readStream = gfs.createReadStream({ _id: song.audioFileId });
-        readStream.pipe(res);
+        let song = await Song.findById(req.params.id);
+
+        const downloadStream = bucket.openDownloadStream(new Types.ObjectId(song.audioFileId.toString()));
+        downloadStream.pipe(res);
     } catch (error) {
-        res.status(500).send({ error: 'Error fetching audio' });
+        console.log(error)
+        res.status(500).send({ error: 'Error fetching audio file' });
     }
 });
 
