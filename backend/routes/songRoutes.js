@@ -33,7 +33,16 @@ router.post('/upload', upload.fields([{ name: 'audio' }, { name: 'image' }]), as
 router.get('/list', async (req, res) => {
     try {
         const songs = await Song.find();
-        res.send(songs);
+        let songsOnlyNeeded = songs.map(song => {
+            return {
+                producer: song.producer,
+                en: song.en,
+                jp: song.jp,
+                romaji: song.romaji
+            };
+        });
+
+        res.status(200).send(songsOnlyNeeded);
     } catch (error) {
         res.status(500).send({ error: 'Error fetching songs' });
     }
