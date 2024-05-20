@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react'
 import './App.css'
 
 import { Button } from '@/components/ui/button' 
+import { Separator } from '@/components/ui/separator'
 
 import { ThemeProvider } from './components/theme-provider'
 
@@ -31,6 +32,14 @@ function App() {
 
   const [endingOpen, setEndingOpen] = useState(false);
   const [won, setWon] = useState(false);
+
+  const [en, setEn] = useState("");
+  const [jp, setJp] = useState("");
+  const [romaji, setRomaji] = useState("");
+  const [producer, setProducer] = useState("");
+  const [spotifyLink, setSpotifyLink] = useState("");
+  const [youtubeLink, setYoutubeLink] = useState("");
+  const [appleMusicLink, setAppleMusicLink] = useState("");
 
   const [imgSrc, setImgSrc] = useState("")
 
@@ -78,6 +87,15 @@ function App() {
         setCorrectSong(response.en + " - " + response.jp + " - " + response.romaji + " - " + response.producer);
         setSrc("https://vocaloidle-server.onrender.com/songs/audio/" + response._id)
         setImgSrc("https://vocaloidle-server.onrender.com/songs/image/" + response._id)
+
+        setEn(response.en);
+        setJp(response.jp);
+        setRomaji(response.romaji);
+        setProducer(response.producer);
+
+        setSpotifyLink(response.spotify);
+        setYoutubeLink(response.yt);
+        setAppleMusicLink(response.apple);
       })
 
     if (audioRef.current) {
@@ -143,7 +161,7 @@ function App() {
         Loading...
       </div>
 
-      <EndingDialog open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} />
+      <EndingDialog open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} en={en} jp={jp} romaji={romaji} producer={producer} spotifyLink={spotifyLink} youtubeLink={youtubeLink} appleMusicLink={appleMusicLink} />
 
       <header className="border-b flex border-cyan-600 justify-center align-middle p-2 max-h-20 bg-cyan-800 shadow">
         <img src={vocaloidle} className="max-h-20" alt="Vocaloidle logo" />
@@ -159,7 +177,7 @@ function App() {
 
           <div className="container flex flex-row space-x-2 px-0 w-full h-full">
             <SongSearch songs={songs} songSearchValue={songSearchValue} setSongSearchValue={setSongSearchValue} onValueChange={handleSongSearchChange} />
-            <Button className="bg-cyan-700 text-white hover:bg-cyan-800 w-24 h-12 justify-center text-md" onClick={submitGuess}>Guess</Button>
+            <Button className="bg-cyan-700 text-white hover:bg-cyan-800 w-32 h-12 justify-center text-md" onClick={submitGuess}>Guess</Button>
           </div>
 
           <div className="h-4 w-full flex flex-row">
@@ -173,7 +191,7 @@ function App() {
 
         <div className="h-12 my-2 flex flex-row justify-center space-x-4">
           <a href="https://matthewyang.tech/" className='text-cyan-100'>By Matthew Yang</a>
-          <p className="text-cyan-100">&bull;</p>
+          <Separator orientation='vertical' className='h-8'/>
           <a href="https://github.com/YellowLime77/vocaloidle" className="text-cyan-100">GitHub</a>
         </div>
       </div>

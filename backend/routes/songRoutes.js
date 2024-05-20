@@ -77,15 +77,7 @@ router.get('/random', async (req, res) => {
         const random = Math.floor(Math.random() * count);
         const song = await Song.findOne().skip(random);
 
-        const songOnlyNeeded = {
-            _id: song._id,
-            producer: song.producer,
-            en: song.en,
-            jp: song.jp,
-            romaji: song.romaji
-        };
-
-        res.status(200).send(songOnlyNeeded);
+        res.status(200).send(song);
     } catch (error) {
         res.status(500).send({ error: 'Error fetching song' });
     }
