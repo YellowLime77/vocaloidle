@@ -3,10 +3,17 @@ const router = express.Router();
 const upload = require('../middleware/upload');
 const Song = require('../models/song');
 
+const Grid = require('gridfs-stream');
 const mongoose = require('mongoose');
-const { MongoClient, GridFSBucket } = require('mongodb');
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-const connection = mongoose.connection;
+const {GridFsStorage} = require('multer-gridfs-storage');
+require('dotenv').config();
+
+const conn = mongoose.createConnection(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+let gfs;
+conn.once('open', () => {
+    gfs = Grid(conn.db, mongoose.mongo);
+    gfs.collection('uploads');
+});
 
 router.post('/upload', upload.fields([{ name: 'audio' }, { name: 'image' }]), async (req, res) => {
     console.log("uploading song...");
@@ -77,12 +84,8 @@ router.get('/random', async (req, res) => {
 router.get('/audio/:id', async (req, res) => {
     try {
         const song = await Song.findById(req.params.id);
-        const bucket = new GridFSBucket(connection.db, {
-            bucketName: 'uploads'
-        });
-        const objectId = new mongoose.Types.ObjectId(song.audioFileId);
-        const downloadStream = bucket.openDownloadStream(objectId);
-        downloadStream.pipe(res);
+        const readStream = gfs.createReadStream({ _id: song.audioFileId });
+        readStream.pipe(res);
     } catch (error) {
         res.status(500).send({ error: 'Error fetching audio' });
     }

@@ -51,7 +51,10 @@ function App() {
     axios.get('https://vocaloidle-server.onrender.com/ping')
       .then(res => {
         console.log(res.data)
-        overlayRef.current!.style.display = "none";
+        overlayRef.current!.style.opacity = "0";
+        setTimeout(() => {
+          overlayRef.current!.style.display = "none";
+        }, 500)
       })
 
     axios.get('https://vocaloidle-server.onrender.com/songs/list')
@@ -108,7 +111,7 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div ref={overlayRef} className="flex items-center text-4xl text-center justify-center fixed w-full h-screen top-0 left-0 right-0 bottom-0 bg-transparent/30 backdrop-blur-lg z-20">
+      <div ref={overlayRef} className="flex items-center text-4xl text-center justify-center fixed w-full h-screen top-0 left-0 right-0 bottom-0 bg-transparent/30 backdrop-blur-lg z-20 duration-500">
         Loading...
       </div>
 

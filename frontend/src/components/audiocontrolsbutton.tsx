@@ -40,7 +40,7 @@ const AudioControlButton: React.FC<Props> = ({playing, setPlaying, src, audioRef
             <div className="justify-center w-20 h-20 cursor-pointer hover:opacity-75 active:opacity-30 active:scale-90 duration-200">
                 {playing ? (<CirclePause className="w-full h-full" onClick={pauseSong}/>) : (<CirclePlay className="w-full h-full" onClick={playSong}/>)}
             </div>
-            <audio ref={audioRef} src={src} className='h-20' controls onTimeUpdate={onTimeUpdate} preload="auto"/>
+            <audio ref={audioRef} src={src} className='h-20' controls onTimeUpdate={onTimeUpdate}/>
         </>
         
     );
