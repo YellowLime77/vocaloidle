@@ -3,6 +3,11 @@ const router = express.Router();
 const upload = require('../middleware/upload');
 const Song = require('../models/song');
 
+const mongoose = require('mongoose');
+const { MongoClient, GridFSBucket } = require('mongodb');
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+const connection = mongoose.connection;
+
 router.post('/upload', upload.fields([{ name: 'audio' }, { name: 'image' }]), async (req, res) => {
     console.log("uploading song...");
     try {
@@ -33,9 +38,8 @@ router.post('/upload', upload.fields([{ name: 'audio' }, { name: 'image' }]), as
 router.get('/list', async (req, res) => {
     try {
         const songs = await Song.find();
-        let songsOnlyNeeded = songs.map(song => {
+        const songsOnlyNeeded = songs.map(song => {
             return {
-                _id: song._id,
                 producer: song.producer,
                 en: song.en,
                 jp: song.jp,
@@ -55,9 +59,31 @@ router.get('/random', async (req, res) => {
         const count = await Song.countDocuments();
         const random = Math.floor(Math.random() * count);
         const song = await Song.findOne().skip(random);
-        res.status(200).send(song);
+
+        const songOnlyNeeded = {
+            producer: song.producer,
+            en: song.en,
+            jp: song.jp,
+            romaji: song.romaji
+        };
+
+        res.status(200).send(songOnlyNeeded);
     } catch (error) {
         res.status(500).send({ error: 'Error fetching song' });
+    }
+});
+
+router.get('/audio/:id', async (req, res) => {
+    try {
+        const song = await Song.findById(req.params.id);
+        const bucket = new GridFSBucket(connection.db, {
+            bucketName: 'uploads'
+        });
+        const objectId = new mongoose.Types.ObjectId(song.audioFileId);
+        const downloadStream = bucket.openDownloadStream(objectId);
+        downloadStream.pipe(res);
+    } catch (error) {
+        res.status(500).send({ error: 'Error fetching audio' });
     }
 });
 

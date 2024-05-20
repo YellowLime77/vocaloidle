@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import './songsearch.css';
 
@@ -16,23 +16,33 @@ import {
 // } from "@/components/ui/popover"
 // import { Input } from "@/components/ui/input"
 
-interface Song {
-  title: string;
-  author: string;
-}
-
 interface Props {
-  songs: Song[];
+  songs: {
+    _id: string;
+    producer: string;
+    en: string;
+    jp: string;
+    romaji: string;
+  }[];
+
+  value: string;
+  onValueChange: (value: string) => void;
 }
 
 const SongSearch: React.FC<Props> = (props) => {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState("")
 
+  useEffect(() => {
+    setValue(props.value);
+  }, [props.value])
+
   return (
     <Command className="h-fit w-full duration-1000">
       <CommandInput className="text-md" placeholder="Search song..." value={value} onInput={(e) => {
         setValue(e.currentTarget.value);
+        props.onValueChange(e.currentTarget.value);
+
         if (e.currentTarget.value === "" && open) {
           setOpen(false)
         } else {
@@ -46,15 +56,17 @@ const SongSearch: React.FC<Props> = (props) => {
           <CommandList className="p-2 h-fit">
             {props.songs.map((song) => (
               <CommandItem
-                key={song.title + " - " + song.author}
-                value={song.title + " - " + song.author}
+                key={ song._id }
+                value={ song.en + " - " + song.jp + " - " + song.romaji + " - " + song.producer }
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
+                  props.onValueChange(currentValue === value ? "" : currentValue)
+                  
                   setOpen(false)
                 }}
                 className="text-md m-1 cursor-pointer"
               >
-                {song.title + " - " + song.author}
+                {song.en + " - " + song.producer}
               </CommandItem>
             ))}
           </CommandList>
