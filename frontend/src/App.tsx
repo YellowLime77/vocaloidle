@@ -51,7 +51,7 @@ function App() {
       .then(res => {
         const response = res.data;
         setCorrectSong(response.en + " - " + response.jp + " - " + response.romaji + " - " + response.producer);
-        setSrc("https://vocaloidle-server.onrender.com/songs/audio/" + response._id + ".mp3")
+        setSrc("https://vocaloidle-server.onrender.com/songs/audio/" + response._id)
       })
 
   }, [])
