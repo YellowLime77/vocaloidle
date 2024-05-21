@@ -108,8 +108,12 @@ function App() {
     if (songSearchValue === "") {
       return;
     }
+
+    setPlaying(false);
+    audioRef.current!.pause();
     
     if (index >= 5) {
+      setAudioLength(9999);
       setWon(false);
       setEndingOpen(true);
       return;
@@ -121,8 +125,10 @@ function App() {
 
     if (songSearchValue === correctSong) {
       card.correct = true;
+      setAudioLength(9999);
       setWon(true);
       setEndingOpen(true);
+      return;
     } else {
       card.correct = false;
     }
@@ -139,6 +145,8 @@ function App() {
     else if (index + 1 === 4) setAudioLength(11 * durationMulti);
     else if (index + 1 === 5) setAudioLength(16 * durationMulti);
     else setAudioLength(9999);
+
+    audioRef.current!.currentTime = 0;
   }
 
   const onTimeUpdate = () => {
@@ -161,7 +169,7 @@ function App() {
         Loading...
       </div>
 
-      <EndingDialog open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} en={en} jp={jp} romaji={romaji} producer={producer} spotifyLink={spotifyLink} youtubeLink={youtubeLink} appleMusicLink={appleMusicLink} />
+      <EndingDialog src={src} open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} en={en} jp={jp} romaji={romaji} producer={producer} spotifyLink={spotifyLink} youtubeLink={youtubeLink} appleMusicLink={appleMusicLink} />
 
       <header className="border-b flex border-cyan-600 justify-center align-middle p-2 max-h-20 bg-cyan-800 shadow">
         <img src={vocaloidle} className="max-h-20" alt="Vocaloidle logo" />
