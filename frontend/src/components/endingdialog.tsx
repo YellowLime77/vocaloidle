@@ -3,7 +3,7 @@ import React from 'react';
 import { SiApplemusic } from "react-icons/si";
 import { FaSpotify, FaYoutube } from "react-icons/fa";
 
-import AudioPlayer from 'react-h5-audio-player';
+// import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
 import './endingdialog.css';
@@ -28,7 +28,7 @@ interface Props {
     imgSrc: string;
 }
 
-const EndingDialog: React.FC<Props> = ({open, setOpen, won, src, imgSrc, en, jp, romaji, producer, spotifyLink, youtubeLink, appleMusicLink}) => {
+const EndingDialog: React.FC<Props> = ({open, setOpen, won/*, src*/, imgSrc, en, jp, romaji, producer, spotifyLink, youtubeLink, appleMusicLink}) => {
     const endingRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
