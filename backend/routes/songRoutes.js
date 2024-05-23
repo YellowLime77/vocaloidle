@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middleware/upload');
 const Song = require('../models/song');
 
 const mongoose = require('mongoose');
 const { MongoClient, GridFSBucket } = require('mongodb');
 const { Types } = require('mongoose');
+const streamifier = require('streamifier');
+
+const multer = require('multer');
+const upload = multer();
+
 require('dotenv').config();
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -19,36 +23,46 @@ connection.once('open', () => {
     });
 });
 
-router.post('/upload', upload.fields([{ name: 'audio' }, { name: 'image' }]), async (req, res) => {
-    console.log("uploading song...");
+// form-data
+// request contains:
+// producer, en, jp, romaji, spotify, yt, apple
+// and two files: audio and image
+// uploads to gridfs
+router.post('/upload', upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'image', maxCount: 1 }]), async (req, res) => {
     try {
         const { producer, en, jp, romaji, spotify, yt, apple } = req.body;
 
-        if (!req.files['audio'] || !req.files['image']) {
-            return res.status(400).send({ error: 'Audio or image file is missing' });
-        }
+        const audioFile = req.files.audio[0];
+        const imageFile = req.files.image[0];
 
-        const audioFileId = req.files['audio'][0].id;
-        const imageFileId = req.files['image'][0].id;
+        const audioUploadStream = bucket.openUploadStream(audioFile.originalname);
+        const imageUploadStream = bucket.openUploadStream(imageFile.originalname);
 
-        const newSong = new Song({
-        producer,
-        en,
-        jp,
-        romaji,
-        spotify,
-        yt,
-        apple,
-        audioFileId,
-        imageFileId
+        const audioFileId = audioUploadStream.id;
+        const imageFileId = imageUploadStream.id;
+
+        streamifier.createReadStream(audioFile.buffer).pipe(audioUploadStream);
+        streamifier.createReadStream(imageFile.buffer).pipe(imageUploadStream);
+
+        audioUploadStream.on('finish', async () => {
+            const song = new Song({
+                producer,
+                en,
+                jp,
+                romaji,
+                spotify,
+                yt,
+                apple,
+                audioFileId,
+                imageFileId
+            });
+
+            await song.save();
+            res.status(201).send({ message: 'Song uploaded successfully' });
         });
-
-        await newSong.save();
-
-        res.status(201).send(newSong);
     } catch (error) {
-        console.log(error)
-        res.status(500).send({ error: 'Error uploading files or saving song metadata' });
+        console.log(error);
+        res.status(500).send({ error: 'Error uploading song' });
     }
 });
 
