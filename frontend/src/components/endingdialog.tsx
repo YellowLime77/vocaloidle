@@ -62,7 +62,7 @@ const EndingDialog: React.FC<Props> = ({open, setOpen, won, src, imgSrc, en, jp,
                 <p className='text-lg font-sans text-white/75'>{jp}</p>
                 <p className='text-lg font-sans text-white/75'>{romaji}</p>
 
-                <AudioPlayer
+                {/* <AudioPlayer
                     src={src}
                     showJumpControls={false}
                     showSkipControls={false}
@@ -72,7 +72,7 @@ const EndingDialog: React.FC<Props> = ({open, setOpen, won, src, imgSrc, en, jp,
                     volume={0.5}
                     preload={"auto"}
                     className="rounded-md shadow-lg bg-cyan-50 border-2 w-full h-fit duration-300 hidden md:block"
-                />
+                /> */}
 
                 <div className="container flex flex-col h-fit w-fit space-y-2 p-4 md:flex-row md:space-x-2">
                     <a href={spotifyLink} target="_blank" className="container w-fit flex flex-row space-x-4 bg-green-600 text-white text-lg hover:bg-green-700 py-2 px-3 rounded-xl shadow-lg items-center text-center duration-300">
