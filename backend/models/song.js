@@ -6,10 +6,7 @@ const songSchema = new Schema({
     jp: String,
     romaji: String,
     en: String,
-    spotify: String,
     yt: String,
-    apple: String,
-    audioFileId: { type: mongoose.Types.ObjectId, required: true },
     imageFileId: { type: mongoose.Types.ObjectId, required: true },
 });
 

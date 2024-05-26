@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const { MongoClient, GridFSBucket } = require('mongodb');
 const { Types } = require('mongoose');
 const streamifier = require('streamifier');
+const stream = require('youtube-audio-stream')
 
 const multer = require('multer');
 const upload = multer();
@@ -28,20 +29,16 @@ connection.once('open', () => {
 // producer, en, jp, romaji, spotify, yt, apple
 // and two files: audio and image
 // uploads to gridfs
-router.post('/upload', upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'image', maxCount: 1 }]), async (req, res) => {
+router.post('/upload', upload.fields([{ name: 'image', maxCount: 1 }]), async (req, res) => {
     try {
-        const { producer, en, jp, romaji, spotify, yt, apple } = req.body;
+        const { producer, en, jp, romaji, yt } = req.body;
 
-        const audioFile = req.files.audio[0];
         const imageFile = req.files.image[0];
 
-        const audioUploadStream = bucket.openUploadStream(audioFile.originalname);
         const imageUploadStream = bucket.openUploadStream(imageFile.originalname);
 
-        const audioFileId = audioUploadStream.id;
         const imageFileId = imageUploadStream.id;
 
-        streamifier.createReadStream(audioFile.buffer).pipe(audioUploadStream);
         streamifier.createReadStream(imageFile.buffer).pipe(imageUploadStream);
 
         audioUploadStream.on('finish', async () => {
@@ -50,10 +47,7 @@ router.post('/upload', upload.fields([{ name: 'audio', maxCount: 1 }, { name: 'i
                 en,
                 jp,
                 romaji,
-                spotify,
                 yt,
-                apple,
-                audioFileId,
                 imageFileId
             });
 
@@ -101,11 +95,12 @@ router.get('/audio/:id', async (req, res) => {
     try {
         let song = await Song.findById(req.params.id);
 
-        const downloadStream = bucket.openDownloadStream(new Types.ObjectId(song.audioFileId.toString()));
-        downloadStream.pipe(res);
+        const resStream = stream(song.yt)
+        resStream.pipe(res)
     } catch (error) {
         console.log(error)
-        res.status(500).send({ error: 'Error fetching audio file' });
+        res.writeHead(500)
+        res.end('Error fetching audio')
     }
 });
 
