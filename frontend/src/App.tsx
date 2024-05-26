@@ -270,7 +270,7 @@ function App() {
 
           <div className="h-5" />
 
-          <div className="container flex flex-col space-y-2 sm:flex-row sm:space-x-2 justify-center items-center px-0 w-full h-fit">
+          <div className="container flex flex-col space-y-2 sm:flex-row sm:space-x-2 justify-center items-center sm:items-start px-0 w-full h-fit">
             <SongSearch songs={songs} songSearchValue={songSearchValue} setSongSearchValue={setSongSearchValue} onValueChange={handleSongSearchChange} />
             <div className="container w-fit space-x-2 flex flex-row-reverse justify-center items-center p-0 m-0 sm:flex-row">
               <Button className="bg-cyan-700 select-none text-white hover:bg-cyan-800 w-32 h-12 justify-center text-md m-2" onClick={submitGuess}>Guess</Button>
