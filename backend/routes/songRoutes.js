@@ -41,7 +41,7 @@ router.post('/upload', upload.fields([{ name: 'image', maxCount: 1 }]), async (r
 
         streamifier.createReadStream(imageFile.buffer).pipe(imageUploadStream);
 
-        audioUploadStream.on('finish', async () => {
+        imageUploadStream.on('finish', async () => {
             const song = new Song({
                 producer,
                 en,
