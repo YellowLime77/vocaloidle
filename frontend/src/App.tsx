@@ -30,7 +30,8 @@ function App() {
 
   const [durationMulti] = useState(2);
   const [playing, setPlaying] = useState(false);
-  const [audioLength, setAudioLength] = useState(1 * durationMulti);
+  const [audioLength, setAudioLength] = useState(durationMulti);
+  const [startingTime, setStartingTime] = useState(0);
 
   const [endingOpen, setEndingOpen] = useState(false);
   const [won, setWon] = useState(false);
@@ -58,12 +59,12 @@ function App() {
   ])
 
   const [audioSections] = useState([
-    {width: "1", done: true},
-    {width: "1", done: false},
-    {width: "2", done: false},
-    {width: "3", done: false},
-    {width: "4", done: false},
-    {width: "5", done: false}
+    {width: "1", state: "playing"},
+    {width: "1", state: "upcoming"},
+    {width: "2", state: "upcoming"},
+    {width: "3", state: "upcoming"},
+    {width: "4", state: "upcoming"},
+    {width: "5", state: "upcoming"},
   ])
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -165,16 +166,31 @@ function App() {
 
     setIndex(index + 1);
 
-    audioSections[index + 1].done = true;
+    if (index > 0) audioSections[index - 1].state = "played";
 
-    if (index + 1 === 1) setAudioLength(2 * durationMulti);
-    else if (index + 1 === 2) setAudioLength(4 * durationMulti);
-    else if (index + 1 === 3) setAudioLength(7 * durationMulti);
-    else if (index + 1 === 4) setAudioLength(11 * durationMulti);
-    else if (index + 1 === 5) setAudioLength(16 * durationMulti);
-    else setAudioLength(9999);
+    audioSections[index + 1].state = "playing";
 
-    audioRef.current!.currentTime = 0;
+    if (index === 0) {
+      setStartingTime(0);
+      setAudioLength(2 * durationMulti);
+    } else if (index === 1) {
+      setStartingTime(1 * durationMulti);
+      setAudioLength(4 * durationMulti);
+    } else if (index === 2) {
+      setStartingTime(2 * durationMulti);
+      setAudioLength(7 * durationMulti);
+    } else if (index === 3) {
+      setStartingTime(4 * durationMulti);
+      setAudioLength(11 * durationMulti);
+    } else if (index === 4) {
+      setStartingTime(7 * durationMulti);
+      setAudioLength(16 * durationMulti);
+    } else {
+      setStartingTime(0);
+      setAudioLength(9999);
+    }
+
+    audioRef.current!.currentTime = startingTime;
 
     setPlaying(true);
     audioRef.current!.play();
@@ -192,13 +208,6 @@ function App() {
 
     setPlaying(false);
     audioRef.current!.pause();
-    
-    if (index >= 5) {
-      setAudioLength(9999);
-      setWon(false);
-      setEndingOpen(true);
-      return;
-    }
 
     const card = cards[index];
     card.label = songSearchValue;
@@ -212,6 +221,13 @@ function App() {
       return;
     } else {
       card.colour = "rose";
+    }
+
+    if (index > 5) {
+      setAudioLength(9999);
+      setWon(false);
+      setEndingOpen(true);
+      return;
     }
 
     nextSong();
@@ -238,10 +254,11 @@ function App() {
 
   const onTimeUpdate = () => {
     if (audioRef.current) {
+      console.log(audioRef.current.currentTime)
       if (audioRef.current.currentTime >= audioLength) {
           setPlaying(false);
           audioRef.current.pause();
-          audioRef.current.currentTime = 0;
+          audioRef.current.currentTime = startingTime;
       }
     }
 }
@@ -285,7 +302,7 @@ function App() {
 
             <div className="h-4 min-h-4 max-h-4 w-full flex flex-row">
               { audioSections.map((audioSection) => (
-                <AudioSection width={audioSection.width} done={audioSection.done} />
+                <AudioSection width={audioSection.width} state={audioSection.state} />
               )) }
             </div>
           </div>

@@ -9,6 +9,7 @@ import 'react-h5-audio-player/lib/styles.css';
 import Confetti from 'react-confetti'
 
 import './endingdialog.css';
+import { Button } from './ui/button';
 
 interface Props {
     open: boolean;
@@ -49,6 +50,10 @@ const EndingDialog: React.FC<Props> = ({open, setOpen, won/*, src*/, imgSrc, en,
 
     const preventClose = (e: React.MouseEvent) => {
         e.stopPropagation();
+    }
+
+    const newSong = () => {
+        location.reload();
     }
 
     return (
@@ -94,6 +99,8 @@ const EndingDialog: React.FC<Props> = ({open, setOpen, won/*, src*/, imgSrc, en,
                             <p>Apple Music</p>
                         </a> */}
                     </div>
+                    <div className="container w-full h-[10px]"/>
+                    <Button className="bg-cyan-700 select-none text-white hover:bg-cyan-800 w-32 h-12 justify-center text-md m-2" onClick={newSong}>New Song</Button>
                 </div>
             </div>
         </>
