@@ -77,15 +77,5 @@
 
 @font-face {
   font-family: 'AOTFShinGoProLight';
-  src: url(AOTFShinGoProLight.otf);
-}
-
-@font-face {
-  font-family: 'AOTFShinGoProRegular';
-  src: url(AOTFShinGoProRegular.otf);
-}
-
-@font-face {
-  font-family: 'AOTFShinGoProMedium';
-  src: url(AOTFShinGoProMedium.otf);
+  src: url(./AOTFShinGoProLight.otf);
 }
