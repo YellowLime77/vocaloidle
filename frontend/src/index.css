@@ -74,3 +74,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: 'AOTFShinGoProLight';
+  src: url(AOTFShinGoProLight.otf);
+}
+
+@font-face {
+  font-family: 'AOTFShinGoProRegular';
+  src: url(AOTFShinGoProRegular.otf);
+}
+
+@font-face {
+  font-family: 'AOTFShinGoProMedium';
+  src: url(AOTFShinGoProMedium.otf);
+}

@@ -14,7 +14,6 @@ interface Props {
 }
 
 const AudioControlButton: React.FC<Props> = ({playing, setPlaying, src, audioRef, onTimeUpdate}) => {
-
     const playSong = () => {
         console.log("Playing song");
 

@@ -1,4 +1,6 @@
 .annoying-image {
-    max-height: calc(100vh - 500px);
+    max-height: min(calc(100vh - 500px), 500px);
     min-height: 50px;
+    max-width: min(90%, 700px);
+    min-width: 50px;
 }
