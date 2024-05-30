@@ -2,7 +2,8 @@ import React from 'react';
 
 import './audiocontrolsbutton.css';
 
-import { CirclePlay, CirclePause } from 'lucide-react';
+import play from '/play.svg'
+import pause from '/pause.svg'
 
 interface Props {
     playing: boolean;
@@ -15,8 +16,6 @@ interface Props {
 
 const AudioControlButton: React.FC<Props> = ({playing, setPlaying, src, audioRef, onTimeUpdate}) => {
     const playSong = () => {
-        console.log("Playing song");
-
         setPlaying(true);
 
         if (audioRef.current) {
@@ -25,8 +24,6 @@ const AudioControlButton: React.FC<Props> = ({playing, setPlaying, src, audioRef
     }
 
     const pauseSong = () => {
-        console.log("Pausing song");
-
         setPlaying(false);
 
         if (audioRef.current) {
@@ -36,9 +33,9 @@ const AudioControlButton: React.FC<Props> = ({playing, setPlaying, src, audioRef
 
     return (
         <>
-            <div className="justify-center w-20 h-20 cursor-pointer hover:opacity-75 active:opacity-30 active:scale-90 duration-200">
-                {playing ? (<CirclePause className="w-full h-full" onClick={pauseSong}/>) : (<CirclePlay className="w-full h-full" onClick={playSong}/>)}
-            </div>
+            <button className="justify-center w-20 h-20 cursor-pointer rounded-full hover:opacity-75 active:opacity-30 active:scale-90 duration-200">
+            {playing ? (<img src={pause} className="w-full h-full" draggable={false} alt="Play" onClick={pauseSong} />) : (<img src={play} className="w-full h-full" draggable={false} alt="Pause button" onClick={playSong} />)}
+            </button>
             <audio ref={audioRef} src={src} className='h-20' onTimeUpdate={onTimeUpdate} preload="auto"/>
         </>
         

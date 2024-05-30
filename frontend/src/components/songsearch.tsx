@@ -2,21 +2,6 @@ import React, { useState} from 'react';
 
 import './songsearch.css';
 
-import {
-  Command,
-  CommandEmpty,
-  CommandList,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command"
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from "@/components/ui/popover"
-// import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
-
 interface Props {
   songs: {
     _id: string;

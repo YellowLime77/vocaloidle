@@ -2,9 +2,6 @@ import { useEffect, useState, useRef } from 'react'
 
 import './App.css'
 
-import { Button } from '@/components/ui/button' 
-import { Separator } from '@/components/ui/separator'
-
 import { ThemeProvider } from './components/theme-provider'
 
 import vocaloidle from '/Vocaloidle.svg'
@@ -14,6 +11,7 @@ import SongSearch from './components/songsearch'
 import AudioSection from './components/audiosection'
 import AudioControlButton from './components/audiocontrolsbutton'
 import EndingDialog from './components/endingdialog'
+
 
 import AudioMotionAnalyzer from 'audiomotion-analyzer';
 
@@ -156,7 +154,7 @@ function App() {
       })
 
     if (audioRef.current) {
-      audioRef.current.volume = 0.75;
+      audioRef.current.volume = 0.6;
     }
 
   }, [])
@@ -170,27 +168,31 @@ function App() {
 
     audioSections[index + 1].state = "playing";
 
+    let tempStartingTime = 0;
+
     if (index === 0) {
-      setStartingTime(0);
+      tempStartingTime = 0;
       setAudioLength(2 * durationMulti);
     } else if (index === 1) {
-      setStartingTime(1 * durationMulti);
+      tempStartingTime = durationMulti;
       setAudioLength(4 * durationMulti);
     } else if (index === 2) {
-      setStartingTime(2 * durationMulti);
+      tempStartingTime = 2 * durationMulti;
       setAudioLength(7 * durationMulti);
     } else if (index === 3) {
-      setStartingTime(4 * durationMulti);
+      tempStartingTime = 4 * durationMulti;
       setAudioLength(11 * durationMulti);
     } else if (index === 4) {
-      setStartingTime(7 * durationMulti);
+      tempStartingTime = 7 * durationMulti;
       setAudioLength(16 * durationMulti);
     } else {
-      setStartingTime(0);
+      tempStartingTime = 0;
       setAudioLength(9999);
     }
 
-    audioRef.current!.currentTime = startingTime;
+    setStartingTime(tempStartingTime);
+
+    audioRef.current!.currentTime = tempStartingTime;
 
     setPlaying(true);
     audioRef.current!.play();
@@ -223,7 +225,7 @@ function App() {
       card.colour = "rose";
     }
 
-    if (index > 5) {
+    if (index >= 5) {
       setAudioLength(9999);
       setWon(false);
       setEndingOpen(true);
@@ -254,7 +256,6 @@ function App() {
 
   const onTimeUpdate = () => {
     if (audioRef.current) {
-      console.log(audioRef.current.currentTime)
       if (audioRef.current.currentTime >= audioLength) {
           setPlaying(false);
           audioRef.current.pause();
@@ -271,7 +272,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div ref={overlayRef} className="flex flex-col items-center space-y-4 text-center justify-center fixed w-full h-screen top-0 left-0 right-0 bottom-0 bg-transparent/30 backdrop-blur-lg z-20 duration-500">
         <h1 className="font-extrabold text-[50px] text-cyan-50">Loading...</h1>
-        <p className="font-medium text-[20px] text-cyan-300">May take up to 1 minute</p>
+        <p className="font-medium text-[20px] text-cyan-300">May take up to 1 minute as the server coldstarts</p>
       </div>
 
       <EndingDialog src={src} open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} en={en} jp={jp} romaji={romaji} producer={producer} spotifyLink={spotifyLink} youtubeLink={youtubeLink} appleMusicLink={appleMusicLink} />
