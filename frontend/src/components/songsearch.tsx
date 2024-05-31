@@ -1,67 +1,48 @@
-import React, { useState} from 'react';
+import React, { Key } from 'react';
+
+import {
+  Autocomplete,
+  AutocompleteItem
+} from "@nextui-org/autocomplete";
 
 import './songsearch.css';
 
 interface Props {
   songs: {
-    _id: string;
     producer: string;
     en: string;
     jp: string;
     romaji: string;
   }[];
 
-  songSearchValue: string;
   setSongSearchValue: (value: string) => void;
-  onValueChange: (value: string) => void;
 }
 
-const SongSearch: React.FC<Props> = ({songs, songSearchValue, setSongSearchValue, onValueChange}) => {
-  const [open, setOpen] = useState(false);
+const SongSearch: React.FC<Props> = ({songs, setSongSearchValue}) => {
+
+  const onSelectionChange = (key: Key) => {
+    console.log(key);
+    if (key === null) {
+      setSongSearchValue('');
+    } else {
+      setSongSearchValue(key as string);
+    }
+  };
+
 
   return (
-    <Command className="h-fit w-full duration-1000 my-4">
-      <CommandInput className="text-md" placeholder="Search song..." value={songSearchValue} onInput={(e) => {
-        setSongSearchValue(e.currentTarget.value);
-        onValueChange(e.currentTarget.value);
+    <Autocomplete className="h-full w-full my-4" label="Search song..."
+      onSelectionChange={onSelectionChange}
+      allowsCustomValue={true}>
 
-        if (e.currentTarget.value === "" && open) {
-          setOpen(false)
-        } else {
-          setOpen(true)
-        }
-      }}/>
-
-      <ScrollArea className="z-20">
-        { open ? (
-          <>
-            <CommandList className="p-2 h-fit overflow-y-scroll">
-              <CommandEmpty>No Songs Found</CommandEmpty>
-                {songs.map((song) => (
-                  <CommandItem
-                    key={ song._id }
-                    value={ [song.en, song.jp, song.romaji, song.producer].filter(Boolean).join(' - ') }
-                    onSelect={(currentValue) => {
-                      setSongSearchValue(currentValue === songSearchValue ? "" : currentValue)
-                      onValueChange(currentValue === songSearchValue ? "" : currentValue)
-                      
-                      setOpen(false)
-                    }}
-                    className="text-md m-1 cursor-pointer"
-                  >
-                    {song.en + " - " + song.producer}
-                  </CommandItem>
-                ))}
-            </CommandList>
-          </>
-        ) : (
-          <>
-            <CommandEmpty className="h-0"/>
-            <CommandList/>
-          </>
-        )}
-      </ScrollArea>
-    </Command>
+      {songs.map((song) => (
+        <AutocompleteItem 
+          key={ [song.en, song.jp, song.romaji, song.producer].filter(Boolean).join(' - ') }
+        >
+          {song.en + " - " + song.producer}
+        </AutocompleteItem >
+      ))}
+    </Autocomplete>
   );
 }
 

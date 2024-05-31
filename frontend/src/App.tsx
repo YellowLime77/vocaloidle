@@ -2,8 +2,6 @@ import { useEffect, useState, useRef } from 'react'
 
 import './App.css'
 
-import { ThemeProvider } from './components/theme-provider'
-
 import vocaloidle from '/Vocaloidle.svg'
 
 import Card from './components/card'
@@ -12,15 +10,17 @@ import AudioSection from './components/audiosection'
 import AudioControlButton from './components/audiocontrolsbutton'
 import EndingDialog from './components/endingdialog'
 
+import {Button} from "@nextui-org/button";
+import {Divider} from "@nextui-org/divider";
 
 import AudioMotionAnalyzer from 'audiomotion-analyzer';
 
 import axios from 'axios'
 
 function App() {
-  const [songs, setSongs] = useState([]);
+  const [songs, setSongs] = useState<{ en: string, jp: string, romaji: string, producer: string }[]>([]);
   const [songSearchValue, setSongSearchValue] = useState("");
-  const [correctSong, setCorrectSong] = useState("");
+  const [correctSong, setCorrectSong] = useState<{ en: string, jp: string, romaji: string, producer: string }>();
 
   const [index, setIndex] = useState(0);
 
@@ -48,12 +48,12 @@ function App() {
   // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
   const [cards] = useState([
-    {label: "", shown: false, colour: "slate"},
-    {label: "", shown: false, colour: "slate"},
-    {label: "", shown: false, colour: "slate"},
-    {label: "", shown: false, colour: "slate"},
-    {label: "", shown: false, colour: "slate"},
-    {label: "", shown: false, colour: "slate"}
+    {label: "", shown: false, colour: "blue"},
+    {label: "", shown: false, colour: "blue"},
+    {label: "", shown: false, colour: "blue"},
+    {label: "", shown: false, colour: "blue"},
+    {label: "", shown: false, colour: "blue"},
+    {label: "", shown: false, colour: "blue"}
   ])
 
   const [audioSections] = useState([
@@ -139,7 +139,14 @@ function App() {
     axios.get('https://vocaloidle-server.onrender.com/songs/random')
       .then(res => {
         const response = res.data;
-        setCorrectSong([response.en, response.jp, response.romaji, response.producer].filter(Boolean).join(' - '));
+        setCorrectSong(
+          {
+            en: response.en,
+            jp: response.jp,
+            romaji: response.romaji,
+            producer: response.producer
+          }
+        );
         setSrc("https://vocaloidle-server.onrender.com/songs/audio/" + response._id)
         setImgSrc("https://vocaloidle-server.onrender.com/songs/image/" + response._id)
 
@@ -203,19 +210,19 @@ function App() {
       return;
     }
 
-    // also if the value isn't a valid song
-    if (!songs.map((song: { en: string, jp: string, romaji: string, producer: string }) => [song.en, song.jp, song.romaji, song.producer].filter(Boolean).join(' - ')).includes(songSearchValue)) {
-      return;
-    }
-
     setPlaying(false);
     audioRef.current!.pause();
 
+    const song = songs.find(song => [song.en, song.jp, song.romaji, song.producer].filter(Boolean).join(' - ') === songSearchValue);
+    if (!song || !correctSong) {
+      return;
+    }
+
     const card = cards[index];
-    card.label = songSearchValue;
+    card.label = song.en + " - " + song.producer;
     card.shown = true;
 
-    if (songSearchValue === correctSong) {
+    if (song.en === correctSong.en && song.jp === correctSong.jp && song.romaji === correctSong.romaji && song.producer === correctSong.producer) {
       card.colour = "cyan";
       setAudioLength(9999);
       setWon(true);
@@ -264,12 +271,8 @@ function App() {
     }
 }
 
-  const handleSongSearchChange = (newValue: string) => {
-    setSongSearchValue(newValue);
-  };
-
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <>
       <div ref={overlayRef} className="flex flex-col items-center space-y-4 text-center justify-center fixed w-full h-screen top-0 left-0 right-0 bottom-0 bg-transparent/30 backdrop-blur-lg z-20 duration-500">
         <h1 className="font-extrabold text-[50px] text-cyan-50">Loading...</h1>
         <p className="font-medium text-[20px] text-cyan-300">May take up to 1 minute as the server coldstarts</p>
@@ -277,22 +280,23 @@ function App() {
 
       <EndingDialog src={src} open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} en={en} jp={jp} romaji={romaji} producer={producer} spotifyLink={spotifyLink} youtubeLink={youtubeLink} appleMusicLink={appleMusicLink} />
 
-      <header className="border-b flex border-cyan-600 justify-center align-middle p-2 max-h-20 bg-cyan-800 shadow">
+      <header className="border-b flex border-cyan-600 justify-center align-middle p-2 h-20 bg-cyan-800 shadow">
         <img src={vocaloidle} className="max-h-20 select-none" alt="Vocaloidle logo" />
       </header>
-      <div className="container flex flex-col" style={{height: "calc(100vh - 5rem)"}}>
-        <div className="container flex flex-col w-full h-full bg-cyan-900/20 border rounded-b-lg shadow space-y-4 p-4 items-center">
+
+      <div className="container w-full flex flex-col items-center mx-auto py-0" style={{height: "auto", minHeight: "calc(100vh - 5rem)"}}>
+        <div className="container flex flex-col w-full bg-slate-700/40 border h-full border-slate-600 rounded-b-lg shadow space-y-4 p-4 items-center">
           { cards.map((card) => (
             <Card label={card.label} shown={card.shown} colour={card.colour} />
           )) }
 
           <div className="h-5" />
 
-          <div className="container flex flex-col space-y-2 sm:flex-row sm:space-x-2 justify-center items-center sm:items-start px-0 w-full h-fit">
-            <SongSearch songs={songs} songSearchValue={songSearchValue} setSongSearchValue={setSongSearchValue} onValueChange={handleSongSearchChange} />
-            <div className="container w-fit space-x-2 flex flex-row-reverse justify-center items-center p-0 m-0 sm:flex-row">
-              <Button className="bg-cyan-700 select-none text-white hover:bg-cyan-800 w-32 h-12 justify-center text-md m-2" onClick={submitGuess}>Guess</Button>
-              <Button className="bg-rose-700/50 select-none text-white hover:bg-rose-800/50 w-32 h-12 justify-center text-md m-2" onClick={skipGuess}>Skip</Button>
+          <div className="container flex flex-col space-y-0 sm:flex-row sm:space-x-2 justify-center items-center px-0 w-full h-[120px] sm:h-[50px]">
+            <SongSearch songs={songs} setSongSearchValue={setSongSearchValue} />
+            <div className="container h-full w-fit space-x-2 flex flex-row-reverse justify-center items-center p-0 sm:flex-row">
+              <Button className="py-[16px] m-1 h-full w-[80px]" variant="solid" color="primary" onClick={submitGuess}>Guess</Button>
+              <Button className="py-[16px] m-1 h-full w-[80px]" variant="bordered" color="secondary" onClick={skipGuess}>Skip</Button>
             </div>
           </div>
 
@@ -313,11 +317,11 @@ function App() {
 
         <div className="h-12 my-2 flex flex-row justify-center space-x-4">
           <a href="https://matthewyang.tech/" className='text-cyan-100'>By Matthew Yang</a>
-          <Separator orientation='vertical' className='h-8'/>
+          <Divider orientation='vertical' className='h-8'/>
           <a href="https://github.com/YellowLime77/vocaloidle" className="text-cyan-100">GitHub</a>
         </div>
       </div>
-    </ThemeProvider>
+    </>
   )
 }
 

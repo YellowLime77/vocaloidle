@@ -1,87 +1,42 @@
+import {nextui} from '@nextui-org/theme'
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './src/**/*.{html,css,js,ts,jsx,tsx,mdx}',
+    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  prefix: "",
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        'sm': '640px',
-        // => @media (min-width: 640px) { ... }
-
-        'md': '768px',
-        // => @media (min-width: 768px) { ... }
-
-        'lg': '1024px',
-        // => @media (min-width: 1024px) { ... }
-
-        'xl': '1280px',
-        // => @media (min-width: 1280px) { ... }
-
-        '2xl': '1536px',
-        // => @media (min-width: 1536px) { ... }
-      },
-    },
-    extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-    },
+    extend: {},
   },
-  plugins: [require("tailwindcss-animate")],
+  darkMode: "class",
+  plugins: [
+    nextui({
+      prefix: "nextui", // prefix for themes variables
+      addCommonColors: false, // override common colors (e.g. "blue", "green", "pink").
+      defaultTheme: "dark", // default theme from the themes object
+      defaultExtendTheme: "dark", // default theme to extend on custom themes
+      layout: {}, // common layout tokens (applied to all themes)
+      themes: {
+        light: {
+          layout: {}, // light theme layout tokens
+          colors: {}, // light theme colors
+        },
+        dark: {
+          layout: {}, // dark theme layout tokens
+          colors: {}, // dark theme colors
+        },
+        // ... custom themes
+      },
+    }),
+  ],
   safelist: [
     {
-      pattern: /border-+/
-    },
-    {
       pattern: /bg-+/
-    },
-    {
+    }, {
+      pattern: /border-+/
+    }, {
       pattern: /text-+/
     }
   ]
-};
+}
