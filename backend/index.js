@@ -5,11 +5,7 @@ const songRoutes = require('./routes/songRoutes');
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: 'https://vocaloidle.matthewyang.tech/',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors());
 
 require('dotenv').config();
 const MONGO_URI = process.env.MONGO_URI;
