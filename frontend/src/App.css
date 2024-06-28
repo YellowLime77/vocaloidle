@@ -9,6 +9,24 @@ body {
     letter-spacing: 1px;
 }
 
+.bg {
+    background-image: url(bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: -1;
+}
+
+.footer-text {
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+
+.gradient-border {
+    background: linear-gradient(transparent, transparent) padding-box,
+                linear-gradient(to right, darkblue, darkorchid) border-box;
+    border: 3px solid transparent;
+}
+
 .slice0 {
     width: calc(100% / 22)
 }

@@ -8,7 +8,7 @@ interface Props {
 
 const AudioSection: React.FC<Props> = (props) => {
     return (
-        <div className={"h-full border  " + (props.state === "playing" ? "bg-cyan-500 border-cyan-100" : (props.state === "played" ? "bg-cyan-700/80 border-cyan-300/80" : "bg-muted border-slate-500"))}
+        <div className={"h-full border  " + (props.state === "playing" ? "bg-rose-300 border-rose-100" : (props.state === "played" ? "bg-rose-300/60 border-rose-100/60" : "bg-purple-900/20 border-purple-600"))}
             style={{width: parseInt(props.width, 10) / 16 * 100 + "%"}}
         />
     );

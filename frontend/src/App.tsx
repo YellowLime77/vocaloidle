@@ -98,7 +98,7 @@ function App() {
       showPeaks: false,
       showScaleX: false,
       outlineBars: true,
-      fillAlpha: 0.5,
+      fillAlpha: 0.6,
       lineWidth: 2,
       maxFreq: 10000,
     });
@@ -272,7 +272,7 @@ function App() {
 }
 
   return (
-    <>
+    <div className="bg">
       <div ref={overlayRef} className="flex flex-col items-center space-y-4 text-center justify-center fixed w-full h-screen top-0 left-0 right-0 bottom-0 bg-transparent/30 backdrop-blur-lg z-20 duration-500">
         <h1 className="font-extrabold text-[50px] text-cyan-50">Loading...</h1>
         <p className="font-medium text-[20px] text-cyan-300">May take up to 1 minute as the server coldstarts</p>
@@ -280,12 +280,12 @@ function App() {
 
       <EndingDialog src={src} open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} en={en} jp={jp} romaji={romaji} producer={producer} spotifyLink={spotifyLink} youtubeLink={youtubeLink} appleMusicLink={appleMusicLink} />
 
-      <header className="border-b flex border-cyan-600 justify-center align-middle p-2 h-20 bg-cyan-800 shadow">
+      <header className="border-b-[3px] flex border-pink-500/50 justify-center align-middle p-2 h-20 bg-rose-800/40 shadow">
         <img src={vocaloidle} className="max-h-20 select-none" alt="Vocaloidle logo" />
       </header>
 
       <div className="container w-full flex flex-col items-center mx-auto py-0" style={{height: "auto", minHeight: "calc(100vh - 5rem)"}}>
-        <div className="container flex flex-col w-full bg-slate-700/40 border h-full border-slate-600 rounded-b-lg shadow space-y-4 p-4 items-center">
+        <div className="container flex flex-col w-full  bg-purple-800/20 backdrop-blur-lg border-[3px] border-t-0 h-full border-purple-600/50 rounded-b-lg shadow space-y-4 p-4 items-center">
           { cards.map((card) => (
             <Card label={card.label} shown={card.shown} colour={card.colour} />
           )) }
@@ -295,8 +295,8 @@ function App() {
           <div className="container flex flex-col space-y-0 sm:flex-row sm:space-x-2 justify-center items-center px-0 w-full h-[120px] sm:h-[50px]">
             <SongSearch songs={songs} setSongSearchValue={setSongSearchValue} />
             <div className="container h-full w-fit space-x-2 flex flex-row-reverse justify-center items-center p-0 sm:flex-row">
-              <Button className="py-[16px] m-1 h-full w-[80px]" variant="solid" color="primary" onClick={submitGuess}>Guess</Button>
-              <Button className="py-[16px] m-1 h-full w-[80px]" variant="bordered" color="secondary" onClick={skipGuess}>Skip</Button>
+              <Button className="py-[16px] m-1 h-full w-[80px] bg-pink-600" variant="solid" color="primary" onClick={submitGuess}>Guess</Button>
+              <Button className="py-[16px] m-1 h-full w-[80px] bg-white/60 border-blue-500 text-blue-500" variant="bordered" color="secondary" onClick={skipGuess}>Skip</Button>
             </div>
           </div>
 
@@ -316,12 +316,12 @@ function App() {
         </div>
 
         <div className="h-12 my-2 flex flex-row justify-center space-x-4">
-          <a href="https://matthewyang.tech/" className='text-cyan-100'>By Matthew Yang</a>
-          <Divider orientation='vertical' className='h-8'/>
-          <a href="https://github.com/YellowLime77/vocaloidle" className="text-cyan-100">GitHub</a>
+          <a href="https://matthewyang.tech/" className='text-purple-950 font-extrabold footer-text'>By Matthew Yang</a>
+          <Divider orientation='vertical' className='h-8 bg-purple-950'/>
+          <a href="https://github.com/YellowLime77/vocaloidle" className="text-purple-950 font-extrabold footer-text">GitHub</a>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
