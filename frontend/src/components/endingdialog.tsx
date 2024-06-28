@@ -62,7 +62,7 @@ const EndingDialog: React.FC<Props> = ({open, setOpen, won/*, src*/, imgSrc, en,
                 { won ? <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} gravity={0.03} tweenDuration={50000} numberOfPieces={window.innerWidth} className="z-30" colors={
                     ["#06b6d4", "#e3007f"]
                 } /> : null }
-                <div className='container h-fit w-fit max-w-full max-h-full bg-slate-800 border-slate-700 border rounded-md p-8 flex flex-col space-y-2 items-center justify-center text-center shadow-lg z-40' onClick={preventClose}>
+                <div className='container h-fit w-fit max-w-full max-h-full bg-pink-800/50 border-pink-700/50 border-[3px] rounded-md p-8 flex flex-col space-y-2 items-center justify-center text-center shadow-lg z-40' onClick={preventClose}>
                     <p className={"text-4xl my-4 text-" + (won ? "cyan" : "rose") + "-300 font-extrabold"}>{won ? "Congrats!" : "Better luck next time..."}</p>
 
                     <div className="w-fit h-fit max-w-full max-h-screen flex justify-center">
@@ -100,7 +100,7 @@ const EndingDialog: React.FC<Props> = ({open, setOpen, won/*, src*/, imgSrc, en,
                         </a> */}
                     </div>
                     <div className="container w-full h-[10px]"/>
-                    <Button className="py-[16px] h-fit w-[120px]" variant="solid" color="primary" onClick={newSong}>New Song</Button>
+                    <Button className="py-[16px] h-fit w-[120px] bg-pink-600" variant="solid" color="primary" onClick={newSong}>New Song</Button>
                 </div>
             </div>
         </>
