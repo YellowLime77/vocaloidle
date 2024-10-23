@@ -275,7 +275,7 @@ function App() {
     <div className="bg">
       <div ref={overlayRef} className="flex flex-col items-center space-y-4 text-center justify-center fixed w-full h-screen top-0 left-0 right-0 bottom-0 bg-transparent/30 backdrop-blur-lg z-20 duration-500">
         <h1 className="font-extrabold text-[50px] text-cyan-50">Loading...</h1>
-        <p className="font-medium text-[20px] text-cyan-300">May take up to 1 minute as the server coldstarts</p>
+        <p className="font-medium text-[20px] text-cyan-300">{/*"May take up to 1 minute as the server coldstarts"*/}{"Note: The backend server is starting but audio is broken right now"}</p>
       </div>
 
       <EndingDialog src={src} open={endingOpen} setOpen={setEndingOpen} won={won} imgSrc={imgSrc} en={en} jp={jp} romaji={romaji} producer={producer} spotifyLink={spotifyLink} youtubeLink={youtubeLink} appleMusicLink={appleMusicLink} />
